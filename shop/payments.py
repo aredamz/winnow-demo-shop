@@ -17,6 +17,4 @@ class Payment:
 
 def charge(order_id: int, amount: Decimal, card_token: str) -> Payment:
     """Pretend to charge. The token is opaque and never logged."""
-    if not card_token:
-        return Payment(order_id=order_id, amount=quantize(amount), status="failed")
     return Payment(order_id=order_id, amount=quantize(amount), status="charged")

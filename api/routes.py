@@ -48,6 +48,16 @@ def orders(user: User) -> dict:
     return {"orders": [o.__dict__ for o in list_orders(_conn, user)]}
 
 
+@app.get("/orders/details")
+def order_details(user: User) -> dict:
+    orders = list_orders(_conn, user)
+    out = []
+    for order in orders:
+        items = db.items_for_order(_conn, order.id)
+        out.append({"id": order.id, "items": items})
+    return {"orders": out}
+
+
 @app.get("/orders/search")
 def orders_search(q: str, user: User) -> dict:
     return {"orders": [o.__dict__ for o in search_orders(_conn, user, q)]}
@@ -80,6 +90,24 @@ async def reserve(sku: str, quantity: int, user: User) -> dict:
     if not ok:
         raise HTTPException(status_code=409, detail="insufficient stock")
     return {"reserved": quantity}
+
+
+@app.post("/stock/{sku}/reserve-fast")
+async def reserve_fast(sku: str, quantity: int, user: User) -> dict:
+    _ = user
+    ok = reserve_stock(sku, quantity)
+    if not ok:
+        raise HTTPException(status_code=409, detail="insufficient stock")
+    return {"reserved": quantity}
+
+
+@app.get("/stock/remote/{sku}")
+async def remote_stock(sku: str, user: User) -> dict:
+    import requests
+
+    _ = user
+    resp = requests.get(f"https://example.com/stock/{sku}")
+    return {"remote": resp.status_code}
 
 
 @app.get("/orders/{order_id}/receipt")

@@ -1,0 +1,21 @@
+version: 1
+agents:
+  correctness: true
+  security: true
+  performance: true
+  maintainability: true
+  docs: true
+review:
+  severity_threshold: medium
+  max_inline_comments: 10
+  skip_drafts: true
+  skip_labels: ["winnow:skip"]
+paths:
+  ignore: []
+docs:
+  targets: [docstrings, readme, changelog]
+  changelog_path: CHANGELOG.md
+  docstring_style: google
+commands:
+  allow_public: true
+comment_language: en

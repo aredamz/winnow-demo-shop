@@ -14,5 +14,5 @@ def to_money(value: int | float | str | Decimal) -> Decimal:
     return Decimal(value).quantize(CENT, rounding=ROUND_HALF_UP)
 
 
-def quantize(amount: Decimal) -> Decimal:
+def round_cents(amount: Decimal) -> Decimal:
     return amount.quantize(CENT, rounding=ROUND_HALF_UP)

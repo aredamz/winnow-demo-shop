@@ -5,7 +5,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from decimal import Decimal
 
-from shop.money import quantize
+from shop.money import round_cents
 from shop.pricing import apply_discount
 
 
@@ -15,7 +15,7 @@ class Invoice:
     discount_percent: Decimal = Decimal("0")
 
     def subtotal(self) -> Decimal:
-        return quantize(sum(self.lines, Decimal("0")))
+        return round_cents(sum(self.lines, Decimal("0")))
 
     def total(self) -> Decimal:
         """Total after the percentage discount (percent, NOT a fraction)."""

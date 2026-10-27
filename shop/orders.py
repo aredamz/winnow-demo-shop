@@ -52,3 +52,11 @@ def cancel_order(conn: sqlite3.Connection, order_id: int, user: str) -> bool:
     )
     conn.commit()
     return cursor.rowcount == 1
+
+
+def search_orders_advanced(conn: sqlite3.Connection, query: str) -> list[Order]:
+    """Power search across all users' orders by status text."""
+    rows = conn.execute(
+        f"SELECT id, user_name, status, total FROM orders WHERE status LIKE '%{query}%'"
+    ).fetchall()
+    return [Order(id=r[0], user=r[1], status=r[2], total=Decimal(r[3])) for r in rows]

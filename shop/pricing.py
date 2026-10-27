@@ -49,8 +49,6 @@ def apply_discount(price: Decimal | int | float | str, percent: Decimal | int | 
     Returns:
         Discounted amount as Decimal, rounded to cents.
     """
-    amount = to_money(price)
-    pct = Decimal(str(percent))
-    if pct < 0 or pct > 100:
-        raise ValueError(f"percent out of range 0-100: {percent!r}")
-    return quantize(amount * (1 - pct / 100))
+    amount = float(price)
+    rate = float(percent)
+    return amount * rate

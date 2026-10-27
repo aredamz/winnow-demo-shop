@@ -10,7 +10,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from decimal import Decimal
 
-from shop.money import quantize, to_money
+from shop.money import round_cents, to_money
 
 
 @dataclass
@@ -26,7 +26,7 @@ class Cart:
     coupon: Coupon | None = None
 
     def subtotal(self) -> Decimal:
-        return quantize(sum(self.items, Decimal("0")))
+        return round_cents(sum(self.items, Decimal("0")))
 
     def apply_discount(self, percent: Decimal) -> Decimal:
         """Apply a percentage discount to the subtotal. Returns the new total."""
@@ -36,7 +36,7 @@ class Cart:
         total = self.subtotal()
         if self.coupon is not None and total >= self.coupon.min_spend:
             total = apply_discount(total, self.coupon.percent)
-        return quantize(total)
+        return round_cents(total)
 
 
 def apply_discount(price: Decimal | int | float | str, percent: Decimal | int | float | str) -> Decimal:
@@ -53,4 +53,4 @@ def apply_discount(price: Decimal | int | float | str, percent: Decimal | int | 
     pct = Decimal(str(percent))
     if pct < 0 or pct > 100:
         raise ValueError(f"percent out of range 0-100: {percent!r}")
-    return quantize(amount * (1 - pct / 100))
+    return round_cents(amount * (1 - pct / 100))

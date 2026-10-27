@@ -6,7 +6,7 @@ import sqlite3
 from dataclasses import dataclass
 from decimal import Decimal
 
-from shop.money import quantize
+from shop.money import round_cents
 
 
 @dataclass
@@ -18,7 +18,7 @@ class Order:
 
 
 def create_order(conn: sqlite3.Connection, cart_total: Decimal, user: str) -> Order:
-    total = quantize(Decimal(cart_total))
+    total = round_cents(Decimal(cart_total))
     cursor = conn.execute(
         "INSERT INTO orders (user_name, status, total) VALUES (?, ?, ?)",
         (user, "open", str(total)),

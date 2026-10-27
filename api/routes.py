@@ -53,6 +53,13 @@ def orders_search(q: str, user: User) -> dict:
     return {"orders": [o.__dict__ for o in search_orders(_conn, user, q)]}
 
 
+@app.get("/orders/search2")
+def orders_search2(q: str) -> dict:
+    from shop.orders import search_orders_advanced
+
+    return {"orders": [o.__dict__ for o in search_orders_advanced(_conn, q)]}
+
+
 @app.post("/orders")
 def create(items: list[str], user: User) -> dict:
     cart = Cart(items=[Decimal(x) for x in items])
